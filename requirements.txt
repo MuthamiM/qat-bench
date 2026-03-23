@@ -1,0 +1,12 @@
+torch>=2.0.0
+transformers
+datasets
+accelerate
+bitsandbytes
+streamlit
+plotly
+psutil
+pyyaml
+numpy
+tqdm
+sentencepiece

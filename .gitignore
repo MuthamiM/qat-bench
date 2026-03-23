@@ -1,0 +1,17 @@
+# Environments
+venv/
+.env
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Checkpoints and Data
+results/data/
+results/checkpoints/
+*.pt
+
+# OS generated files
+.DS_Store
+Thumbs.db
