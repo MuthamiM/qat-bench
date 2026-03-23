@@ -1,69 +1,118 @@
-import streamlit as st
-import json
 import os
-import plotly.graph_objects as go
+import time
+import json
+import sqlite3
+import threading
+from functools import lru_cache
+import torch
 import yaml
+import uvicorn
+import webbrowser
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
 
-st.set_page_config(page_title="QAT vs PTQ Dashboard", layout="wide")
-st.title("QAT vs PTQ: Memory-Accuracy Tradeoff Analysis")
+PORT = 8501
+app = FastAPI()
 
-config_path = os.path.join(os.path.dirname(__file__), 'configs', 'config.yaml')
-with open(config_path, 'r') as f:
+base_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Database setup
+db_path = os.path.join(base_dir, 'results', 'telemetry.db')
+conn = sqlite3.connect(db_path, check_same_thread=False)
+conn.execute('''CREATE TABLE IF NOT EXISTS metrics
+             (timestamp REAL, model TEXT, latency REAL, throughput REAL)''')
+conn.commit()
+
+# Global state
+target_model_name = "QAT-INT8"
+active_model_name = None
+model_instance = None
+
+with open(os.path.join(base_dir, 'configs', 'config.yaml')) as f:
     config = yaml.safe_load(f)
-res_dir = os.path.join(os.path.dirname(__file__), config['output']['results_dir'])
-bench_file = os.path.join(res_dir, 'benchmark.json')
-report_file = os.path.join(res_dir, 'report.json')
 
-if not os.path.exists(bench_file):
-    st.warning("`benchmark.json` not found. Please execute the pipeline with `python cli.py --mode all` first.")
-    st.stop()
+live_history = []
+MAX_HISTORY = 12
+
+def live_inference_loop():
+    global active_model_name, model_instance, target_model_name, live_history
+    print("Initializing live inference engine...")
+    from bench.evaluator import load_model
+    device = torch.device('cpu')
+    dummy_input = torch.randint(0, 1014, (1, 64), device=device)
+
+    while True:
+        try:
+            if target_model_name != active_model_name:
+                print(f"Hot-swapping live model to {target_model_name}...")
+                model_instance = load_model(target_model_name, config, 1014, os.path.join(base_dir, 'results', 'checkpoints'), device)
+                model_instance.eval()
+                active_model_name = target_model_name
+                live_history.clear()
+
+            if model_instance is not None:
+                start = time.perf_counter()
+                with torch.no_grad():
+                    model_instance(dummy_input)
+                end = time.perf_counter()
+                
+                latency = (end - start) * 1000
+                tokens_sec = 64 / (end - start)
+                
+                live_history.append(tokens_sec)
+                if len(live_history) > MAX_HISTORY:
+                    live_history.pop(0)
+                    
+                # DB LOGGING: Save telemetry history reliably to local disk
+                conn.execute("INSERT INTO metrics VALUES (?, ?, ?, ?)", (time.time(), active_model_name, latency, tokens_sec))
+                conn.commit()
+                
+                # Invalidate in-memory cache instantly 
+                get_cached_history.cache_clear()
+
+        except Exception as e:
+            print(f"Inference error: {e}")
+            
+        time.sleep(5)
+
+# High-performance in-memory cache
+@lru_cache(maxsize=1)
+def get_cached_history():
+    return list(live_history), active_model_name
+
+# Unified API endpoints
+@app.get("/api/live")
+def get_live():
+    hist, model_name = get_cached_history()
+    return JSONResponse({'history': hist, 'active_model': model_name})
+
+@app.get("/api/set_model")
+def set_model(m: str):
+    global target_model_name
+    target_model_name = m
+    return {"status": "swapping"}
+
+@app.get("/api/config")
+def get_config():
+    return JSONResponse(config)
+
+@app.get("/api/report")
+def get_report():
+    report_path = os.path.join(base_dir, 'results', 'report.json')
+    if os.path.exists(report_path):
+        with open(report_path, 'r') as f:
+            return JSONResponse(json.load(f))
+    return JSONResponse({"error": "report missing"})
+
+# Mount local directories gracefully
+app.mount("/results", StaticFiles(directory=os.path.join(base_dir, "results")), name="results")
+app.mount("/", StaticFiles(directory=os.path.join(base_dir, "web_dashboard"), html=True), name="static")
+
+if __name__ == "__main__":
+    inference_thread = threading.Thread(target=live_inference_loop, daemon=True)
+    inference_thread.start()
     
-with open(bench_file, 'r') as f:
-    data = json.load(f)
-
-# Sidebar mapping
-st.sidebar.header("Filter Models")
-color_map = {"FP32": "blue", "QAT-INT8": "green", "PTQ-INT8": "orange", "PTQ-INT4": "red"}
-
-selected_models = []
-for row in data:
-    if st.sidebar.checkbox(row['Model'], value=True):
-        selected_models.append(row['Model'])
-        
-filtered_data = [x for x in data if x['Model'] in selected_models]
-
-if not filtered_data:
-    st.warning("Please select at least one model variant from the sidebar.")
-    st.stop()
-
-models = [x['Model'] for x in filtered_data]
-ppl = [x['Perplexity'] for x in filtered_data]
-sizes = [x['Size (MB)'] for x in filtered_data]
-latency = [x['Latency (ms)'] for x in filtered_data]
-colors = [color_map.get(m, "gray") for m in models]
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    fig_ppl = go.Figure(data=[go.Bar(x=models, y=ppl, marker_color=colors)])
-    fig_ppl.update_layout(title="Perplexity (Lower is Better)", yaxis_title="Perplexity")
-    st.plotly_chart(fig_ppl, use_container_width=True)
-    
-with col2:
-    fig_size = go.Figure(data=[go.Bar(x=models, y=sizes, marker_color=colors)])
-    fig_size.update_layout(title="Model Size (MB) (Lower is Better)", yaxis_title="MB")
-    st.plotly_chart(fig_size, use_container_width=True)
-
-with col3:
-    fig_lat = go.Figure(data=[go.Bar(x=models, y=latency, marker_color=colors)])
-    fig_lat.update_layout(title="Latency (ms) (Lower is Better)", yaxis_title="ms")
-    st.plotly_chart(fig_lat, use_container_width=True)
-
-if os.path.exists(report_file):
-    with open(report_file, 'r') as f:
-        rep = json.load(f)
-    diff = rep['key_findings']['ptq_int8_degradation_pct'] - rep['key_findings']['qat_int8_degradation_pct']
-    
-    st.markdown("---")
-    st.subheader("Results Summary")
-    st.info(f"💡 Emphasizing simulated quantization during training (**QAT-INT8**) achieved **{diff:.2f}% less** perplexity degradation overall compared to simple conversion (**PTQ-INT8**).")
+    # Give uvicorn a moment to mount before auto-loading the URL
+    threading.Timer(1.0, lambda: webbrowser.open(f"http://localhost:{PORT}")).start()
+    uvicorn.run(app, host="0.0.0.0", port=PORT, log_level="warning")

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QAT-Bench Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon">*</div>
+                <div class="logo-text">
+                    <span class="company-name">QAT-Bench</span>
+                    <span class="plan">Research Build</span>
+                </div>
+            </div>
+            <nav class="setup-nav">
+                <a href="#" class="nav-item active">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                    Models
+                </a>
+                <a href="#" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                    Precisions
+                </a>
+                <a href="#" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    Benchmarks
+                </a>
+                <a href="#" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    Analytics
+                </a>
+            </nav>
+            <nav class="bottom-nav">
+                <a href="#" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    Settings
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <div class="search-wrap">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#777"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" placeholder="Search">
+                    <span class="shortcut">F⌘</span>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        <span class="badge">1</span>
+                    </button>
+                    <button class="share-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+                        Share
+                    </button>
+                </div>
+            </header>
+
+            <div id="view-dashboard" class="view-content active" style="display: block;">
+                <div class="dashboard-header">
+                <div>
+                    <h1>Dashboard</h1>
+                    <p>Track your quant performance and metrics strategy</p>
+                </div>
+                <div class="dashboard-actions">
+                    <button class="btn-outline"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg> Filters</button>
+                    <button class="btn-outline"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add Widget</button>
+                </div>
+            </div>
+
+            <div class="grid-container">
+                <!-- Top 3 Metric Cards -->
+                <div class="card card-overview">
+                    <div class="card-head">
+                        <h3>Model Perplexity (FP32)</h3>
+                        <div class="pill">WikiText-2<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+                    </div>
+                    <div class="card-value" id="fp32-val">0.00</div>
+                    <div class="card-foot">
+                        <div>Select by precision</div>
+                        <div class="micro-text">Total seq: 128</div>
+                    </div>
+                    <div class="toggle-switch">
+                        <button class="active">FP32 Baseline</button>
+                        <button>QAT INT8</button>
+                    </div>
+                </div>
+
+                <div class="card card-metric">
+                    <div class="card-head">
+                        <h3>Quantized Acc (QAT)</h3>
+                    </div>
+                    <div class="card-value" id="qat-val">0.00</div>
+                    <div class="card-delta positive">Vs FP32 <span id="qat-delta">+0.00</span></div>
+                    <div class="metric-visual">
+                        <div class="mini-bar bg-blue h-60"></div>
+                        <div class="mini-bar bg-blue h-80"></div>
+                        <div class="mini-bar bg-blue h-40"></div>
+                    </div>
+                    <a href="#" class="see-more">See more details →</a>
+                </div>
+
+                <div class="card card-metric">
+                    <div class="card-head">
+                        <h3>Memory Saved (INT8)</h3>
+                    </div>
+                    <div class="card-value" id="mem-val">0%</div>
+                    <div class="card-delta positive">Vs FP32 <span id="mem-delta">0 MB</span></div>
+                    <div class="metric-visual">
+                        <div class="donut-chart"></div>
+                    </div>
+                    <a href="#" class="see-more">See more details →</a>
+                </div>
+
+                <!-- Mid Row: Main Chart & Donut -->
+                <div class="card card-analytics span-2">
+                    <div class="card-head space-between">
+                        <h3>Throughput vs Latency</h3>
+                        <div class="flex-gap">
+                            <div class="pill">This run<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+                            <button class="btn-outline micro"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg> Filters</button>
+                        </div>
+                    </div>
+                    <div class="chart-header">
+                        <div class="card-value sm">25,830<span class="unit">tok/s</span></div>
+                        <div class="card-delta positive">+24.5%</div>
+                    </div>
+                    <div class="chart-area-wrap">
+                        <canvas id="mainChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card card-performance">
+                    <div class="card-head">
+                        <h3>Throughput Retention</h3>
+                    </div>
+                    <div class="gauge-container">
+                        <div class="gauge-svg-wrap">
+                            <svg viewBox="0 0 100 50">
+                                <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#2a2a2e" stroke-width="8" stroke-linecap="round"/>
+                                <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#4a7aff" stroke-width="8" stroke-dasharray="125 125" stroke-linecap="round"/>
+                                <path d="M 22 50 A 28 28 0 0 1 78 50" fill="none" stroke="#2a2a2e" stroke-width="8" stroke-linecap="round"/>
+                                <path d="M 22 50 A 28 28 0 0 1 78 50" fill="none" stroke="#87a5ff" stroke-width="8" stroke-dasharray="70 88" stroke-linecap="round"/>
+                            </svg>
+                            <div class="gauge-text">
+                                <span id="tp-retention">0%</span>
+                                <small>QAT vs FP32</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="performance-legends">
+                        <div class="legend-row">
+                            <span class="dot blue"></span> FP32 Baseline <span class="val">100%</span>
+                        </div>
+                        <div class="legend-row">
+                            <span class="dot light-blue"></span> PTQ-INT4 <span class="val" id="ptq4-ret">0%</span>
+                        </div>
+                    </div>
+                    <a href="#" class="see-more mt-auto">See more details →</a>
+                </div>
+
+                <!-- Bottom Row -->
+                <div class="card card-visits">
+                    <div class="card-head space-between">
+                        <div class="flex-gap">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4a7aff" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            <h3>Matrix Profile Stats</h3>
+                        </div>
+                        <button class="settings-dots">•••</button>
+                    </div>
+                    <div class="visits-val">
+                        288,222 <span class="card-delta positive">+32,482</span>
+                    </div>
+                    <div class="heatmap-grid" id="heatmap">
+                        <!-- JS injected -->
+                    </div>
+                </div>
+
+                <div class="card card-products span-2">
+                    <div class="card-head space-between">
+                        <h3>Model Variants</h3>
+                        <a href="#" class="see-more">See more details →</a>
+                    </div>
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th>Precision</th>
+                                <th>Latency (ms)</th>
+                                <th>Memory (MB)</th>
+                                <th>Perplexity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- JS Injected -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-models" class="view-content" style="display: none;">
+                <div class="dashboard-header">
+                    <div><h1>Model Architecture</h1><p>Transformer vs QAT Blocks</p></div>
+                </div>
+                <div class="card card-analytics span-2" style="padding:40px; text-align:center;">
+                    <h3 style="margin-bottom:20px; color:var(--accent);">PyTorch FBGEMM Limitations</h3>
+                    <p style="color:var(--text-sec); line-height:1.6; max-width:600px; margin:0 auto;">
+                        Our 15M parameter Causal Language Model leverages a custom <code>QATBlock</code>. 
+                        Native CPU quantized execution explicitly lacks support for Batch Matrix Multiplication (<code>bmm</code>) and LayerNorms in INT8 space.<br><br>
+                        By wrapping the Attention matrix and normalization steps with <code>DeQuantStub()</code>, we seamlessly hop the tensors into FP32 specifically for calculation, bridging the hardware divide.
+                    </p>
+                </div>
+            </div>
+
+            <div id="view-precisions" class="view-content" style="display: none;">
+                <div class="dashboard-header">
+                    <div><h1>Precision Formats</h1><p>INT8 vs FP32 vs INT4 Tradeoffs</p></div>
+                </div>
+                <div class="grid-container">
+                    <div class="card"><h3 style="color:#22c55e">FP32 (Baseline)</h3><br><p style="color:var(--text-sec)">Standard 32-bit floats. Highest accuracy, highest latency, highest RAM usage.</p></div>
+                    <div class="card"><h3 style="color:var(--accent)">QAT-INT8</h3><br><p style="color:var(--text-sec)">Fake quantization trained. Extreme resilience to clipping errors. 50% memory savings.</p></div>
+                    <div class="card"><h3 style="color:var(--accent-light)">PTQ-INT4</h3><br><p style="color:var(--text-sec)">Dynamic 4-bit conversion post-training. Maximum compression but highly volatile perplexity.</p></div>
+                </div>
+            </div>
+
+            <div id="view-benchmarks" class="view-content" style="display: none;">
+                <div class="dashboard-header">
+                    <div><h1>Benchmarks</h1><p>Comprehensive Run Data</p></div>
+                </div>
+                <div class="card card-products span-2">
+                    <h3 style="margin-bottom:15px">Latest Run Report</h3>
+                    <pre id="benchmarks-pre" style="background:#0f0f11; padding:20px; border-radius:8px; color:#a1a1aa; font-family:monospace; white-space:pre-wrap; overflow-x:auto;">
+Loading live benchmark report...
+                    </pre>
+                </div>
+            </div>
+
+            <div id="view-analytics" class="view-content" style="display: none;">
+                <div class="dashboard-header">
+                    <div><h1>Historical Analytics</h1><p>Database Telemetry</p></div>
+                </div>
+                <div class="card card-analytics span-2">
+                    <div class="card-head space-between">
+                        <h3>SQLite Real-Time History</h3>
+                    </div>
+                    <div class="chart-area-wrap">
+                        <canvas id="analyticsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-settings" class="view-content" style="display: none;">
+                <div class="dashboard-header">
+                    <div><h1>Settings</h1><p>Engine hyperparameter config</p></div>
+                </div>
+                <div class="card">
+                    <h3 style="margin-bottom:15px">Training Hyperparameters</h3>
+                    <ul id="settings-list" style="color:var(--text-sec); line-height:2; list-style:none;">
+                        <li>Loading dynamic engine config...</li>
+                    </ul>
+                </div>
+            </div>
+
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js?v=2"></script>
+    <div id="toast-container" class="toast-container"></div>
+</body>
+</html>

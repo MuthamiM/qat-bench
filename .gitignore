@@ -4,3 +4,4 @@ results/data/
 results/checkpoints/
 *.log
 test_*.py
+results/telemetry.db
