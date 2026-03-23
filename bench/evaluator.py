@@ -18,6 +18,14 @@ def load_model(variant, config, vocab_size, chkpt_dir, device):
         model = QATTransformerLM(config['model'], vocab_size)
         model.fuse_model()
         model.qconfig = torch.quantization.get_default_qat_qconfig('fbgemm')
+        # Ignore embeddings and layer norm since fbgemm doesn't always support them linearly
+        model.wte.qconfig = None
+        model.wpe.qconfig = None
+        model.ln_f.qconfig = None
+        for block in model.blocks:
+            block.ln_1.qconfig = None
+            block.ln_2.qconfig = None
+            
         torch.quantization.prepare_qat(model, inplace=True)
         model.eval()
         torch.quantization.convert(model, inplace=True)

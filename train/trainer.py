@@ -7,6 +7,7 @@ from torch.utils.data import DataLoader, TensorDataset
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import LambdaLR
 import json
+from tqdm import tqdm
 
 from model.transformer import TransformerLM
 
@@ -22,7 +23,9 @@ def train_epoch(model, dataloader, optimizer, scheduler, config, device):
     model.train()
     total_loss = 0
     grad_clip = config['training']['grad_clip']
-    for batch in dataloader:
+    
+    pbar = tqdm(dataloader, desc="Training Batch")
+    for batch in pbar:
         x = batch[0].to(device)
         y = batch[1].to(device)
         
@@ -34,17 +37,22 @@ def train_epoch(model, dataloader, optimizer, scheduler, config, device):
         scheduler.step()
         
         total_loss += loss.item()
+        pbar.set_postfix({'loss': f"{loss.item():.4f}"})
+        
     return total_loss / len(dataloader)
 
 @torch.no_grad()
 def evaluate(model, dataloader, device):
     model.eval()
     total_loss = 0
-    for batch in dataloader:
+    
+    pbar = tqdm(dataloader, desc="Evaluating")
+    for batch in pbar:
         x = batch[0].to(device)
         y = batch[1].to(device)
         logits, loss = model(x, y)
         total_loss += loss.item()
+        pbar.set_postfix({'loss': f"{loss.item():.4f}"})
     avg_loss = total_loss / len(dataloader)
     return avg_loss, math.exp(avg_loss) if avg_loss < 20 else float('inf')
 

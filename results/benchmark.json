@@ -1,0 +1,34 @@
+[
+    {
+        "Model": "FP32",
+        "Perplexity": 6.6467,
+        "Size (MB)": 0.93,
+        "RAM (MB)": 490.77,
+        "Latency (ms)": 1.98,
+        "Tokens/sec": 32323.38
+    },
+    {
+        "Model": "QAT-INT8",
+        "Perplexity": 12.5928,
+        "Size (MB)": 0.6,
+        "RAM (MB)": 454.0,
+        "Latency (ms)": 4.11,
+        "Tokens/sec": 15556.02
+    },
+    {
+        "Model": "PTQ-INT8",
+        "Perplexity": 6.6562,
+        "Size (MB)": 0.47,
+        "RAM (MB)": 524.86,
+        "Latency (ms)": 4.09,
+        "Tokens/sec": 15659.36
+    },
+    {
+        "Model": "PTQ-INT4",
+        "Perplexity": 6.6467,
+        "Size (MB)": 0.93,
+        "RAM (MB)": 528.06,
+        "Latency (ms)": 2.26,
+        "Tokens/sec": 28312.2
+    }
+]

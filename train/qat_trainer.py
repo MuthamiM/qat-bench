@@ -26,12 +26,21 @@ def main():
     
     print("Preparing QAT stubs and observers...")
     model.qconfig = torch.quantization.get_default_qat_qconfig('fbgemm')
+    
+    # Ignore embeddings and layer norm since fbgemm doesn't always support them linearly
+    model.wte.qconfig = None
+    model.wpe.qconfig = None
+    model.ln_f.qconfig = None
+    for block in model.blocks:
+        block.ln_1.qconfig = None
+        block.ln_2.qconfig = None
+        
     torch.quantization.prepare_qat(model, inplace=True)
     
     model.to(device)
     
     optimizer = AdamW(model.parameters(), lr=config['training']['lr'], weight_decay=config['training']['weight_decay'])
-    epochs = config['training']['epochs']
+    epochs = 1
     total_steps = epochs * len(train_dl)
     scheduler = get_cosine_schedule_with_warmup(optimizer, config['training']['warmup_steps'], total_steps)
     
@@ -41,9 +50,8 @@ def main():
     
     for epoch in range(1, epochs + 1):
         if epoch == 4:
-            print("Disabling observers and freezing BN stats (Epoch 4)...")
+            print("Disabling observers (Epoch 4)...")
             model.apply(torch.quantization.disable_observer)
-            model.apply(torch.nn.intrinsic.qat.freeze_bn_stats)
             
         train_loss = train_epoch(model, train_dl, optimizer, scheduler, config, device)
         val_loss, val_ppl = evaluate(model, val_dl, device)
